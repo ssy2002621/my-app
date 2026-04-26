@@ -9,7 +9,7 @@
     "dev:ts": "tsc -b -w",
     "dev:convex": "npx convex dev",
     "build": "vite build && tsc --noEmit",
-    "start": "NODE_ENV=production srvx serve --prod --entry ./dist/server/server.js --host 0.0.0.0",
+    "start": "NODE_ENV=production srvx serve --dir . --prod --entry ./dist/server/server.js --host 0.0.0.0 -s ./dist/client",
     "format": "prettier --write .",
     "lint": "tsc && eslint .  --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
