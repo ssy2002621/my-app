@@ -8,8 +8,8 @@
     "dev:web": "vite dev",
     "dev:ts": "tsc -b -w",
     "dev:convex": "npx convex dev",
-    "build": "vinxi build",
-    "start": "node .output/server/index.mjs",
+    "build": "vite build && tsc --noEmit",
+    "start": "NODE_ENV=production srvx serve --prod --entry ./dist/server/server.js --host 0.0.0.0",
     "format": "prettier --write .",
     "lint": "tsc && eslint .  --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
@@ -40,7 +40,6 @@
     "@convex-dev/eslint-plugin": "^1.1.1",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/eslint-config": "^0.3.4",
-    "@tanstack/start": "^1.120.20",
     "@types/node": "^25.3.0",
     "@types/react": "^19.2.13",
     "@types/react-dom": "^19.2.3",
@@ -49,7 +48,6 @@
     "prettier": "^3.8.1",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3",
-    "vinxi": "^0.5.11",
     "vite": "^7.3.1",
     "vite-tsconfig-paths": "^6.0.5"
   }

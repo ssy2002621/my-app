@@ -7,8 +7,11 @@ FROM node:20-bookworm-slim AS build
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+# Render: set this in Docker build args (or as build-time env)
 ARG VITE_CONVEX_URL
-ENV VITE_CONVEX_URL=$VITE_CONVEX_URL
+ENV VITE_CONVEX_URL=${VITE_CONVEX_URL}
+
 RUN npm run build
 
 FROM node:20-bookworm-slim AS runner
@@ -16,13 +19,16 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
 
-RUN apt-get update && apt-get install -y --no-install-recommends pandoc \
+# Pandoc is required by src/lib/pandoc.server.ts
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends pandoc \
   && rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./
 RUN npm ci --omit=dev
-COPY --from=build /app/.output ./.output
-COPY --from=build /app/src/lib/templates ./src/lib/templates
+
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/src/lib/templates/reference-black.docx ./src/lib/templates/reference-black.docx
 
 EXPOSE 3000
-CMD ["node", ".output/server/index.mjs"]
+CMD ["npm", "run", "start"]
