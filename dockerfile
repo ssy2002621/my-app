@@ -21,12 +21,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends pandoc \
 
 COPY package*.json ./
 RUN npm ci --omit=dev
-
-# 复制构建输出（从 dist 而不是 .output）
-COPY --from=build /app/dist ./dist
-
-# 复制模板文件（运行时 pandoc 需要用到）
+COPY --from=build /app/.output ./.output
 COPY --from=build /app/src/lib/templates ./src/lib/templates
 
 EXPOSE 3000
-CMD ["node", "dist/server/server.js"]
+CMD ["node", ".output/server/index.mjs"]
